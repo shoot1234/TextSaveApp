@@ -12,7 +12,7 @@ public class DiaryController {
 	@Autowired
 	DiaryRepository diaryRepository;
 	
-	//日記一覧情報の取得
+	//投稿文章一覧情報の取得
 	@GetMapping("summary")
 	public String summary(Model model) {
 		Iterable<Diary> diarys = diaryRepository.findAll();
