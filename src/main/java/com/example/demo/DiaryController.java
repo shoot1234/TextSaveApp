@@ -3,9 +3,12 @@ package com.example.demo;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +22,7 @@ public class DiaryController {
 
 	//投稿文章一覧情報の取得
 	@GetMapping("summary")
-	public String summary(Model model) {
+	 public String summary(Model model, NewDiaryForm newDiaryForm) {
 		Iterable<Diary> diarys = diaryRepository.findAll();
 		model.addAttribute("diarys", diarys);
 		return "summary";
@@ -34,11 +37,15 @@ public class DiaryController {
 
 	//投稿文章の新規登録
 	@PostMapping("add")
-	public String add(@RequestParam String newdiary) {
-		//ChronoUnit.SECONDSで秒以下を切り捨て
-		Diary diary = new Diary(newdiary, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-		diaryRepository.save(diary);
-		return "redirect:/diary/summary";
-	}
+	public String add(Model model, @Valid NewDiaryForm newDiaryForm, BindingResult bindingResult) {
+	    //バリデーションエラーがあるかどうかチェックして、エラーがあるなら新規登録処理をせずに、一覧表示メソッドを呼び出す
+	    if (bindingResult.hasErrors()) {
+	    	return summary(model, newDiaryForm);
+	    }
+	    //ChronoUnit.SECONDSで秒以下を切り捨て
+	    Diary diary = new Diary(newDiaryForm.getNewdiary(), LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+	    diaryRepository.save(diary);
+	    return "redirect:/diary/summary";
+	  }
 
 }
