@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>【Spring Boot】投稿文章の編集</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body class="container mt-3">
+<h1 class="display-5">投稿文章の編集</h1>
+<form th:action="@{/diary/update}" method="post">
+<input type="text" name="updateddiary" th:value="${editdiary.bodytext}"  class="form-control mb-2">
+<input type="hidden" name="id" th:value="${editdiary.id}"/>
+<button type="submit" class="btn btn-primary">更新する</button><br/><br/>
+<div th:if="${#fields.hasErrors('editDiaryForm.updateddiary')}" th:errors="*{editDiaryForm.updateddiary}" class="alert alert-danger" >投稿エラー</div>
+<a href="/diary/summary">投稿文章一覧に戻る</a>
+</form>
+</body>
+</html>
